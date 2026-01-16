@@ -1,0 +1,41 @@
+# Variáveis de Ambiente - Excel Sales Automation
+# Copie para .env e configure as variáveis necessárias
+
+# Ambiente
+ENVIRONMENT=development
+DEBUG=true
+
+# API
+API_HOST=0.0.0.0
+API_PORT=8000
+API_RELOAD=true
+
+# UI
+UI_HOST=0.0.0.0
+UI_PORT=8501
+
+# Paths (relativos à raiz do projeto)
+DATA_RAW_DIR=data/raw
+DATA_PROCESSED_DIR=data/processed
+
+# LLM - OpenAI / LM Studio / Ollama
+OPENAI_API_KEY=sk-your-key-here
+OPENAI_MODEL=gpt-4o-mini
+LLM_TEMPERATURE=0.0
+LLM_MAX_TOKENS=2000
+
+# Para LM Studio local, descomente:
+# OPENAI_API_BASE=http://localhost:1234/v1
+# OPENAI_MODEL=llama-3.1-8b-instruct
+
+# Para Ollama local, descomente:
+# OPENAI_API_BASE=http://localhost:11434/v1
+# OPENAI_MODEL=llama3
+
+# Processamento
+MAX_FILE_SIZE_MB=50
+CHUNK_SIZE=1000
+
+# Segurança
+ALLOWED_EXTENSIONS=.xlsx,.xls,.xlsm
+CORS_ORIGINS=http://localhost:8501,http://localhost:3000

@@ -1,12 +1,104 @@
-version: "3.9"
+# Docker Compose - Excel Sales Automation
 
 services:
-  app:
+  api:
+    container_name: excel-automation-api
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    volumes:
-      - ../data:/app/data
-      - ../.env:/app/.env
+      target: development
+    image: excel-automation-api:latest
+    restart: unless-stopped
+    environment:
+      - ENVIRONMENT=development
+      - DEBUG=true
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - API_RELOAD=true
+    env_file:
+      - ../.env
     ports:
       - "8000:8000"
+    volumes:
+      - ../app:/app/app:rw
+      - ../data:/app/data:rw
+      - ../.env:/app/.env:ro
+      - ../pyproject.toml:/app/pyproject.toml:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - excel-automation-network
+    command: >
+      uvicorn app.api.routes:app
+      --host 0.0.0.0
+      --port 8000
+      --reload
+      --reload-dir /app/app
+      --log-level debug
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  ui:
+    container_name: excel-automation-ui
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: development
+    image: excel-automation-ui:latest
+    restart: unless-stopped
+    environment:
+      - ENVIRONMENT=development
+      - DEBUG=true
+      - UI_HOST=0.0.0.0
+      - UI_PORT=8501
+      - API_URL=http://api:8000
+    env_file:
+      - ../.env
+    ports:
+      - "8501:8501"
+    volumes:
+      - ../app:/app/app:rw
+      - ../data:/app/data:rw
+      - ../.env:/app/.env:ro
+      - ../pyproject.toml:/app/pyproject.toml:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - excel-automation-network
+    depends_on:
+      api:
+        condition: service_healthy
+    command: >
+      streamlit run app/ui/main.py
+      --server.port=8501
+      --server.address=0.0.0.0
+      --server.headless=true
+      --server.fileWatcherType=poll
+      --browser.gatherUsageStats=false
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+networks:
+  excel-automation-network:
+    driver: bridge
+    name: excel-automation-network

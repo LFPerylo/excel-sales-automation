@@ -1,8 +1,41 @@
-pandas
-openpyxl
-python-dotenv
-langchain
-langchain-openai
-fastapi
-uvicorn
-streamlit
+# Dependências do projeto - Excel Sales Automation
+# Versões flexíveis para compatibilidade com Python 3.12
+
+# Core Framework
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+
+# Data Processing
+pandas>=2.2.0
+openpyxl>=3.1.2
+xlrd>=2.0.1
+
+# File Handling
+python-multipart>=0.0.6
+
+# Validation & Settings
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+
+# LLM & AI
+langchain-core>=0.1.16
+langchain-openai>=0.0.5
+openai>=1.10.0
+
+# UI
+streamlit>=1.30.0
+
+# Utilities
+python-dotenv>=1.0.0
+typer>=0.9.0
+
+# Development Tools
+pytest>=8.0.0
+pytest-cov>=4.1.0
+pytest-asyncio>=0.23.0
+black>=24.1.0
+isort>=5.13.0
+flake8>=7.0.0
+mypy>=1.8.0
+types-pytz
+types-openpyxl
